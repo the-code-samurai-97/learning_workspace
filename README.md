@@ -1,2 +1,6 @@
-RUN 
-'''bazel run //src/line_detect:line_detect'''# learning_workspace
+#RUN 
+```
+bash
+cd learning_workspace && bazel build //...
+```
+
