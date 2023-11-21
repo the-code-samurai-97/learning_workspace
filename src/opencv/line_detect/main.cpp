@@ -1,4 +1,4 @@
-#include "LineFitting.hpp"
+#include "src/opencv/line_detect/LineFitting.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
