@@ -13,3 +13,9 @@ cc_binary(
     srcs = ["main.cpp"],
     deps = [":kernel"],
 )
+
+cc_binary(
+    name = "deviceQuery",
+    srcs = ["deviceQuery.cpp"],
+    deps = ["@local_cuda//:cuda_runtime"],
+)
