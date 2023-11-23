@@ -19,6 +19,7 @@ cc_binary(
     ],
     data = [":model_filegroup"],
     deps = [
+        "@eigen",
         "@opencv",
     ],
 )

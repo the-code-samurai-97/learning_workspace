@@ -2,6 +2,28 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+
+
+#include <Eigen/Dense>
+
+Eigen::Matrix4d createHomogeneousMatrix(double R11, double R12, double R21, double R22, double T11, double T22)
+{
+  Eigen::Matrix4d homogeneousMatrix;
+
+  // Rotation matrix for rotation about z-axis
+  double theta = std::atan2(R21, R11);
+  Eigen::Matrix2d rotationMatrix;
+  rotationMatrix << std::cos(theta), -std::sin(theta),
+      std::sin(theta), std::cos(theta);
+
+  // Fill in the homogeneous matrix
+  homogeneousMatrix << rotationMatrix(0, 0), rotationMatrix(0, 1), 0, T11,
+      rotationMatrix(1, 0), rotationMatrix(1, 1), 0, T22,
+      0, 0, 1, 0,
+      0, 0, 0, 1;
+
+  return homogeneousMatrix;
+}
 int main() {
   // Read input images
   cv::Mat original_1,original_2;
@@ -60,9 +82,12 @@ int main() {
     dst_pts.push_back(keypoints2[match.trainIdx].pt);
   }
 
-  cv::Mat H = cv::findHomography( src_pts,dst_pts, cv::RANSAC);
-  std::cout << "Homography matrix:\n" << H  << std::endl;
 
+  cv::Mat H = cv::findHomography( src_pts,dst_pts, cv::RANSAC);
+  std::cout<<" "<<H.rows <<" "<<H.cols<<"\n";
+  Eigen::Matrix4d homogeneous = createHomogeneousMatrix(H.at<double>(0,0),H.at<double>(0,1),H.at<double>(1,0),H.at<double>(1,1),H.at<double>(0,2),H.at<double>(1,2));
+  std::cout << "Homography matrix:\n" << H  << std::endl;
+std::cout<<"homogeneoues \n" <<homogeneous <<'\n';
 
   // Display the result
   cv::imshow("img_keypoints1 ", img_keypoints1);
