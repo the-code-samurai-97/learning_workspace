@@ -6,10 +6,12 @@ cuda_library(
     name = "thrust_vector",
     srcs = ["01_vector.cu"],
     deps = ["@local_cuda//:thrust"],
+        target_compatible_with = ["@platforms//os:linux"],
 )
 
 # Run with 'bazel run //examples/thrust:main'
 cc_binary(
     name = "01_vector",
     deps = [":thrust_vector"],
+        target_compatible_with = ["@platforms//os:linux"],
 )

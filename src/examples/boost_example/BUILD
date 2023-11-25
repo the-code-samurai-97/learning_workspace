@@ -1,6 +1,9 @@
 cc_binary(
     name = "boost_example",
     srcs = ["main.cpp"],
+    target_compatible_with = [
+        "@platforms//os:macos",
+    ],
     deps = [
         "@boost//:align",
         "@boost//:any",

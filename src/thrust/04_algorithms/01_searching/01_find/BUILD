@@ -8,12 +8,14 @@ cuda_library(
     name = "thrust_cu",
     srcs = ["01_thrust_find.cu"],
     deps = ["@local_cuda//:thrust"],
+        target_compatible_with = ["@platforms//os:linux"],
 )
 
 # Run with 'bazel run //examples/thrust:main'
 cc_binary(
     name = "01_thrust_find",
     deps = [":thrust_cu"],
+  target_compatible_with = ["@platforms//os:linux"],
 )
 cc_binary(
     name = "01_find",

@@ -6,10 +6,12 @@ cuda_library(
     name = "thrust_pointer",
     srcs = ["03_pointer.cu"],
     deps = ["@local_cuda//:thrust"],
+        target_compatible_with = ["@platforms//os:linux"],
 )
 
 # Run with 'bazel run //examples/thrust:main'
 cc_binary(
     name = "03_pointer",
     deps = [":thrust_pointer"],
+        target_compatible_with = ["@platforms//os:linux"],
 )

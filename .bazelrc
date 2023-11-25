@@ -1,6 +1,22 @@
-build --cxxopt=-std=c++20 --host_cxxopt=-std=c++14
+common --color=yes
+common --curses=yes
+
+build --show_progress_rate_limit=0
+build --show_timestamps
+build --incompatible_enable_cc_toolchain_resolution
+build --action_env=CC=clang-17
+# build --action_env=CC=/opt/homebrew/bin/gcc-11
+build --cxxopt=-std=c++20 --host_cxxopt=-std=c++20
 build -c opt
 build --copt -fdiagnostics-color=always
 build --flag_alias=cuda_archs=@rules_cuda//cuda:archs
+# build --linkopt="-fuse-ld=lld"
+
+build:linux --@rules_cuda//cuda:enable=true
+build:macos --@rules_cuda//cuda:enable=false
+build:apple --xcode_version=15.1
+
 build --cuda_archs=sm_75,sm_86
-build --local_ram_resources=HOST_RAM*.25 --local_cpu_resources=HOST_CPUS-6
+build --local_ram_resources=HOST_RAM*.25 --local_cpu_resources=HOST_CPUS-8
+build --action_env=MPLBACKEND=Qt5Agg
+

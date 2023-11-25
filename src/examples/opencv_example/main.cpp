@@ -1,67 +1,80 @@
-#include <iostream>
 #include <cmath>
 #include <opencv2/opencv.hpp>
 
-void rotatePoint(double& x, double& y, double angle) {
-  double newX = x * cos(angle) - y * sin(angle);
-  double newY = x * sin(angle) + y * cos(angle);
-  x = newX;
-  y = newY;
-}
-
 int main() {
-  const int width = 500;
-  const int height = 500;
+  const float deltaA = 0.07f;
+  const float deltaB = 0.02f;
 
-  cv::Mat image(height, width, CV_8UC1, cv::Scalar(0)); // Black background
+  const int columns = 400;
+  const int rows = 400;
 
-  float A = 0, B = 0;
-  float i, j;
-  int k;
-  float z[250000];
-  char b[250000];
+  float A = 0, B = 0, i, j;
+  std::vector<float> z(columns * rows, 0);
+  std::vector<char> b(columns * rows, ' ');
 
-  for (;;) {
-    std::memset(b, ' ', 250000); // White characters
-    std::memset(z, 0, 1000000);
+  cv::Mat outputImage(rows, columns, CV_8UC3,
+                      cv::Scalar(0, 0, 0));  // Black background
 
-    for (j = 0; j < 6.28; j += 0.005) {  // Slower rotation
-      for (i = 0; i < 6.28; i += 0.01) {
-        float c = std::sin(i);
-        float d = std::cos(j);
-        float e = std::sin(A);
-        float f = std::sin(j);
-        float g = std::cos(A);
-        float h = d + 2;
-        float D = 1 / (c * h * e + f * g + 5);
-        float l = std::cos(i);
-        float m = std::cos(B);
-        float n = std::sin(B);
-        float t = c * h * g - f * e;
-        int x = width / 2 + width / 2 * D * (l * h * m - t * n);
-        int y = height / 2 + height / 2 * D * (l * h * n + t * m);
-        int o = x + width * y;
-        int N = 8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n);
+  while (true) {
+    std::fill(b.begin(), b.end(), ' ');
+    std::fill(z.begin(), z.end(), 0);
 
-        if (width * height > o && o >= 0 && D > z[o]) {
-          z[o] = D;
+    for (j = 0; 6.28 > j; j += 0.07f) {
+      for (i = 0; 6.28 > i; i += 0.02f) {
+        const float sini = sinf(i);
+        const float cosj = cosf(j);
+        const float sinA = sinf(A);
+        const float sinj = sinf(j);
+        const float cosA = cosf(A);
+        const float cosj2 = cosj + 2;
+        const float mess = 1 / (sini * cosj2 * sinA + sinj * cosA + 5);
+        const float cosi = cosf(i);
+        const float cosB = cosf(B);
+        const float sinB = sinf(B);
+
+        const int x =
+            (columns / 2) + (3 * columns / 8) * mess *
+                                (cosi * cosj2 * cosB -
+                                 (sini * cosj2 * cosA - sinj * sinA) * sinB);
+        const int y =
+            (6 * rows / 11) + ((3 * rows / 4)) * mess *
+                                  (cosi * cosj2 * sinB +
+                                   (sini * cosj2 * cosA - sinj * sinA) * cosB);
+        const int o = x + columns * y;
+        const int N =
+            8 * ((sinj * sinA - sini * cosj * cosA) * cosB -
+                 sini * cosj * sinA - sinj * cosA - cosi * cosj * sinB);
+
+        if (rows > y && y > 0 && columns > x && x > 0 && mess > z[o]) {
+          z[o] = mess;
           b[o] = ".,-~:;=!*#$@"[N > 0 ? N : 0];
         }
       }
     }
 
-    for (k = 0; k < width * height; k++) {
-      int intensity = (b[k] == ' ') ? 0 : 255; // White characters on black background
-      image.at<uchar>(k / width, k % width) = intensity;
-
-      A += 0.0000002;  // Slower rotation
-      B += 0.0000005; // Slower rotation
+    // Display the OpenCV image with the ASCII art
+    for (int y = 0; y < rows; y++) {
+      for (int x = 0; x < columns; x++) {
+        int o = x + columns * y;
+        char character = b[o];
+        cv::putText(outputImage, std::string(1, character), cv::Point(x, y),
+                    cv::FONT_HERSHEY_SIMPLEX, 0.1, cv::Scalar(255, 255, 255),
+                    0.1, cv::LINE_AA);
+      }
     }
 
-    cv::imshow("Rotating 3D Donut", image);
-    if (cv::waitKey(30) == 27) {
+    // Display the OpenCV image with the ASCII art
+    cv::imshow("ASCII Art", outputImage);
+    outputImage.setTo(cv::Scalar::all(0));
+    A += deltaA;
+    B += deltaB;
+
+    // Break the loop if 'q' key is pressed
+    if (cv::waitKey(100) == 'q') {
       break;
     }
+     // usleep(300);
+
   }
 
   return 0;

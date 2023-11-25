@@ -90,7 +90,7 @@ std::vector<cv::Vec2f> LineFitting::FitLine(const cv::Mat &input_image) {
     const int r = line_index - (n + 1) * (number_of_rhos_ + 2) - 1;
     const double rho = (r - (number_of_rhos_ - 1) * 0.5f) * rho_step_;
     const double angle = minimum_theta_ + n * theta_step_;
-    lines.emplace_back(cv::Vec2f{rho, angle});
+    lines.emplace_back(cv::Vec2f{static_cast<float>(rho), static_cast<float>(angle)});
   }
   return lines;
 }

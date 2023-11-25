@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -10,7 +9,7 @@ int main() {
         ? std::cout << "v does not contain " << n << '\n'
         : std::cout << "v contains " << n << '\n';
   }
-  const std::vector<int>::iterator found_iterator =
+  const auto found_iterator =
       std::find(v.begin(), v.end(), 2);
 
   std::cout << " found_iterator " << *found_iterator << "\n";

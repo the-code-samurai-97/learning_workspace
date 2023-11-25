@@ -1,0 +1,15 @@
+diff --git a/repo.bzl b/repo.bzl
+index 82f72a5..fbbc189 100644
+--- a/repo.bzl
++++ b/repo.bzl
+@@ -58,8 +58,8 @@ alias(
+         "@bazel_tools//src/conditions:linux_x86_64": _linux_{targetVarName},
+ 
+         # MacOS
+-        #"@bazel_tools//src/conditions:darwin": _macos_{targetVarName},
+-        "@bazel_tools//src/conditions:darwin_x86_64": _macos_{targetVarName},
++        "@bazel_tools//src/conditions:darwin": _macos_{targetVarName},
++        #"@bazel_tools//src/conditions:darwin_x86_64": _macos_{targetVarName},
+     }}),
+ )
+ """.format(targetName = commonTarget, targetVarName = commonTargetVarName)

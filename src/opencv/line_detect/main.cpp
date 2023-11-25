@@ -7,7 +7,7 @@
 // params
 float RHO_ = 1.0;
 float THETA_ = 0.1;
-float THRESHOLD_ = 50;
+int THRESHOLD_ = 50;
 float srn_ = 0;
 float stn_ = 0;
 float min_theta_ = 0.0;
