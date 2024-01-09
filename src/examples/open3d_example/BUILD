@@ -10,6 +10,6 @@ cc_binary(
     data = [":input_pcd"],
     deps = [
         "@glfw",
-        "@open3d",
+        "@open3d_macos",
     ],
 )
